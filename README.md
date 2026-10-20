@@ -4,6 +4,15 @@ C++23 tools for custom media on the UniFi UDM Pro 240×240 LCD. Currently suppor
 
 FFmpeg prepares images, GIFs and videos as INDEX8 frames with an RGB565 palette. A static ARM64 runtime streams frames to the patched display MCU. Background playback runs under systemd on the UDM and continues after the PC disconnects; temporary uploads and the service do not survive a UDM reboot. FPS is a pacing limit, not guaranteed throughput.
 
+## Compatibility
+
+- UDM Pro (`UDMPRO`, system ID `ea15`, ARM64), with root SSH access.
+- Display firmware `v2.5.7-0-gd26945b` and the exact supported stock or receiver image.
+- Exact pinned `/usr/bin/ulcmd`, `/usr/bin/dfu-util` and `/lib/systemd/system/ulcmd.service` hashes, defined in [src/device.cpp](src/device.cpp).
+- Internal USB path `1-2`, application VID:PID `1f9b:157d` with `/dev/ttyACM0`, and ROM DFU VID:PID `0483:df11` for flashing.
+
+There is no hardcoded unit serial. The installer captures each device's DFU serial and pins it only for that flashing transaction. Other UDM Pros must pass the same compatibility checks; only one physical unit has been tested. Different firmware or hardware revisions may be rejected and require compatibility work. Use **Inspect device** to check eligibility.
+
 ## Build
 
 Requires CMake, Ninja, pkg-config, a C++23 compiler, JsonCpp, LZ4, OpenSSL and SDL2. Media preparation uses FFmpeg/ffprobe; the file picker uses KDialog. Docker builds the ARM64 runtime; Clang and LLD build the MCU payload. Dear ImGui is fetched at the pinned commit in CMakeLists.txt.
