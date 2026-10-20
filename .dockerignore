@@ -1,0 +1,17 @@
+.git
+build
+assets
+media
+**/*.o
+**/*.a
+**/*.so
+**/*.su
+**/*.elf
+**/*.bin
+**/*.i64
+**/*.id0
+**/*.id1
+**/*.id2
+**/*.nam
+**/*.til
+**/*.log

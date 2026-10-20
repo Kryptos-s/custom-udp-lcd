@@ -1,0 +1,5 @@
+FROM debian:bookworm-slim
+RUN dpkg --add-architecture arm64 && apt-get update && apt-get install -y --no-install-recommends cmake ninja-build pkg-config g++-aarch64-linux-gnu libjsoncpp-dev:arm64 liblz4-dev:arm64 libssl-dev:arm64 && rm -rf /var/lib/apt/lists/*
+RUN printf '%s\n' 'deb-src [signed-by=/usr/share/keyrings/debian-archive-keyring.gpg] http://deb.debian.org/debian bookworm main' > /etc/apt/sources.list.d/udm-source.list && apt-get update && apt-get install -y --no-install-recommends dpkg-dev && mkdir /tmp/jsoncpp-source && cd /tmp/jsoncpp-source && apt-get source libjsoncpp && cmake -S libjsoncpp-1.9.5 -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib/aarch64-linux-gnu -DBUILD_SHARED_LIBS=OFF -DBUILD_STATIC_LIBS=ON -DJSONCPP_WITH_TESTS=OFF -DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF -DJSONCPP_WITH_EXAMPLE=OFF && cmake --build build --target install --parallel && rm -rf /tmp/jsoncpp-source /var/lib/apt/lists/*
+ENV PKG_CONFIG_LIBDIR=/usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig
+WORKDIR /work

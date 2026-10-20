@@ -1,0 +1,32 @@
+{
+  "upstream": "https://elm-chan.org/fsw/tjpgd/",
+  "release": "TJpgDec R0.03",
+  "archive_url": "https://elm-chan.org/fsw/tjpgd/arc/tjpgd3.zip",
+  "archive_sha256": "052fe3efbc9a8be29f31597ad009c5b51a4f6905878eb28569e0ab3d46d0c013",
+  "retrieved_date": "2026-10-18",
+  "original_sha256": {
+    "tjpgd.c": "3a0091b6e1e6407f18633c17c19b5791b878d3ede4282005222bc41050e347a9",
+    "tjpgd.h": "12d7b17c55929224d878b2b801750e32d437ce58c89bc87bd3f5c6d4151337a2",
+    "tjpgdcnf.h": "c8a614b17d61adc51f9fcb0315072c5e89311f4cc27131853b88bff87b163fd6"
+  },
+  "adaptations": [
+    "Normalize CRLF source line endings to LF and trim trailing whitespace; retain upstream copyright and license.",
+    "Replace string.h with stddef.h in the public header for the freestanding ARM compiler.",
+    "Replace vendor memset calls with a private volatile byte loop to avoid unresolved libc functions.",
+    "Clear the aligned int32 AC coefficient array with typed word stores instead of 252 volatile byte stores per block; preserve all 63 zero coefficients and freestanding linkage.",
+    "Configure RGB565 output, no scaling, table clipping and 32-bit FASTDECODE=1.",
+    "Add an explicit geometry-only validation entry that consumes identical Huffman/DC/AC coefficients and restarts while skipping IDCT, DC pixel fill and RGB generation; preserve normal jd_decomp pixel output.",
+    "Add optional inclusive-region decoding with unchanged JDEC layout. MCUs wholly outside the region use the same entropy/geometry-only path; all raster callbacks and strict end checks remain. The jpeg_frame wrapper passes NULL pixels only for those skipped MCUs.",
+    "Compile as C++ with explicit typed pool casts and the existing C ABI; keep the upstream copyright and terms in LICENSE and omit code comments."
+  ],
+  "build_requirement": "Compile with -ffreestanding -fno-builtin -fwrapv. Upstream fixed-point arithmetic can overflow signed integers for malformed coefficient streams.",
+  "integration_requirement": "Call through jpeg_frame.cpp, which validates bounded canonical 240x240 baseline YCbCr envelope and table lengths before jd_prepare.",
+  "supported_profile": "Single scan 8-bit baseline YCbCr, component ids 1/2/3 in order, 4:4:4 / 4:2:2 / 4:2:0, quantizers 0..3 once each, Huffman tables DC0/AC0/DC1/AC1 once each, Y selector 0x00 and Cb/Cr selector 0x11. Final strict EOI and padding required.",
+  "known_scope": "JPEG is lossy. Chroma replication and fixed-point IDCT differ from libjpeg fancy chroma upsampling. Component RGB565 output is canonical; target channel compensation belongs to its caller.",
+  "local_sha256": {
+    "tjpgd.cpp": "00acdf5e4a4b68952a0d6f291904600830ec3b60a08b1d3a73fac3654514d812",
+    "tjpgd.h": "5ca30c69cabdc1d6a78ce06e64271358d5176c07ad708f14b471f9e86d5a8540",
+    "tjpgdcnf.h": "53a46f281f267434ba184fe5c7b5d8539e64e8f307df72ac375d4a15fc395e8a",
+    "LICENSE": "282c2ca7d1498fc71671f0d39e0e1912daeb568a917597ef90bafdda6e1fac27"
+  }
+}
